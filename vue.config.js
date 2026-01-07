@@ -8,5 +8,5 @@ module.exports = {
       },
     },
   },
-  publicPath: "https://appsynergy.github.io/wm-selector/",
+  publicPath: "./",
 };
