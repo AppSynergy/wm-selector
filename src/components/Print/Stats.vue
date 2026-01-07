@@ -1,8 +1,7 @@
 <template>
   <div class="stats">
+    <h3 class="handle">Stats</h3>
     <table>
-      <caption class="handle">{{caption}}</caption>
-
       <thead>
         <tr>
           <th v-if="used">Cost</th>
@@ -22,21 +21,45 @@
       </thead>
 
       <tbody class="all-units-and-upgrades" v-if="!used">
-        <StatLine v-for="(unit, unitID) in units" :key="'unit_' + unitID" :name="unitID" :troop="unit" :used="used" />
-        <StatLine v-for="(upgrade, upgradeID) in upgrades" :key="'upgrade_' + upgradeID" :name="upgradeID" :troop="upgrade" :used="used" />
+        <StatLine
+          v-for="(unit, unitID) in units"
+          :key="'unit_' + unitID"
+          :name="unitID"
+          :troop="unit"
+          :used="used"
+        />
+        <StatLine
+          v-for="(upgrade, upgradeID) in upgrades"
+          :key="'upgrade_' + upgradeID"
+          :name="upgradeID"
+          :troop="upgrade"
+          :used="used"
+        />
       </tbody>
 
       <tbody v-if="used">
         <template v-for="(unit, unitID) in usedUnits">
-          <StatLine :key="'unit_' + unitID" :name="unitID" :troop="unit" :used="used" />
-          <StatLine v-for="(upgrade, upgradeID) in unit.upgrades"  :key="'upgrade_' + upgradeID" :name="upgradeID" :troop="upgrade" :used="used" :parent="unitID" />
+          <StatLine
+            :key="'unit_' + unitID"
+            :name="unitID"
+            :troop="unit"
+            :used="used"
+          />
+          <StatLine
+            v-for="(upgrade, upgradeID) in unit.upgrades"
+            :key="'upgrade_' + upgradeID"
+            :name="upgradeID"
+            :troop="upgrade"
+            :used="used"
+            :parent="unitID"
+          />
         </template>
       </tbody>
 
       <tfoot v-if="used">
         <tr>
-          <td class="cost">{{pointsCost}}</td>
-          <td class="number">{{unitCount}}/{{Math.ceil(unitCount / 2)}}</td>
+          <td class="cost">{{ pointsCost }}</td>
+          <td class="number">{{ unitCount }}/{{ Math.ceil(unitCount / 2) }}</td>
           <td colspan="11"></td>
         </tr>
       </tfoot>
@@ -45,77 +68,92 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters } from "vuex";
 
-import StatLine from '@/components/Print/StatLine';
-import store from '@/store';
+import StatLine from "@/components/Print/StatLine";
+import store from "@/store";
 
-const MAGIC_ITEM_TYPES = ['Magic Standard', 'Magic Weapon', 'Device of Power', 'Bannière Magique', 'Arme Magique', 'Objet Enchanté'];
+const MAGIC_ITEM_TYPES = [
+  "Magic Standard",
+  "Magic Weapon",
+  "Device of Power",
+  "Bannière Magique",
+  "Arme Magique",
+  "Objet Enchanté",
+];
 
 export default {
-  name: 'Stats',
+  name: "Stats",
   components: { StatLine },
-  computed: Object.assign({
-      caption () {
-        return this.used ? 'Stats Used' : store.getters.armyList + ' Army Selector'
+  computed: Object.assign(
+    {
+      caption() {
+        return this.used
+          ? "Stats Used"
+          : store.getters.armyList + " Army Selector";
       },
-      upgrades: () => Object.keys(store.getters.upgrades)
-        .reduce((usedUpgrades, upgradeID) => {
-          if (!MAGIC_ITEM_TYPES.includes(store.getters.upgrades[upgradeID].type)) {
-            usedUpgrades[upgradeID] = Object.assign({}, store.getters.upgrades[upgradeID]);
-          }
+      upgrades: () =>
+        Object.keys(store.getters.upgrades).reduce(
+          (usedUpgrades, upgradeID) => {
+            if (
+              !MAGIC_ITEM_TYPES.includes(store.getters.upgrades[upgradeID].type)
+            ) {
+              usedUpgrades[upgradeID] = Object.assign(
+                {},
+                store.getters.upgrades[upgradeID]
+              );
+            }
 
-          return usedUpgrades;
-        }, {})
+            return usedUpgrades;
+          },
+          {}
+        ),
     },
-    mapGetters(['pointsCost', 'unitCount', 'units', 'usedUnits'])
+    mapGetters(["pointsCost", "unitCount", "units", "usedUnits"])
   ),
-  props: ['used']
+  props: ["used"],
 };
 </script>
 
 <style lang="scss">
-  .stats {
-    @include _(1.2rem);
+.stats {
+  @include _(1.2rem);
 
-    text-align: center;
-    overflow-x: auto;
+  margin-bottom: 20px;
+  text-align: center;
+  overflow-x: auto;
 
-    table {
-      margin: 0;
+  table {
+    margin: 0;
+  }
+
+  .all-units-and-upgrades tr.upgrade {
+    &::after {
+      @include position(absolute, null 0);
+
+      border-top: 0.1rem solid $_color_gray;
+      content: "";
     }
 
-    caption {
-      @include _(1.6rem);
-    }
-
-    .all-units-and-upgrades tr.upgrade {
-      &::after {
-        @include position(absolute, null 0);
-
-        border-top: .1rem solid $_color_gray;
-        content: '';
-      }
-
-      + .upgrade::after {
-        content: none;
-      }
-    }
-
-    th,
-    td {
-      @include padding(0 .25em);
-
-      white-space: nowrap;
-    }
-
-    .number {
-      border-right: .1rem solid $_color_black;
-    }
-
-    .troop,
-    .type {
-      text-align: left;
+    + .upgrade::after {
+      content: none;
     }
   }
+
+  th,
+  td {
+    @include padding(0 0.25em);
+
+    white-space: nowrap;
+  }
+
+  .number {
+    border-right: 0.1rem solid $_color_black;
+  }
+
+  .troop,
+  .type {
+    text-align: left;
+  }
+}
 </style>

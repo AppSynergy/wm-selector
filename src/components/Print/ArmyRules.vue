@@ -1,35 +1,15 @@
 <template>
   <div class="army-rules">
     <h3 class="handle">Army Rules</h3>
-
-    <div v-html="marked(armyRules)"></div>
+    <div>{{ armyRules }}</div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import { marked } from 'marked';
+import { mapGetters } from "vuex";
 
 export default {
-  name: 'ArmyRules',
-  computed: mapGetters(['armyRules']),
-  methods: {
-    marked: (text) => marked(text.join('\n'))
-  }
+  name: "ArmyRules",
+  computed: mapGetters(["armyRules"]),
 };
 </script>
-
-<style lang="scss">
-  .army-rules {
-    h4 {
-      @include _(1.6rem);
-
-      float: left;
-      margin: 0;
-
-      &::after {
-        content: ':\00a0';
-      }
-    }
-  }
-</style>

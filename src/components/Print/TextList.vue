@@ -10,29 +10,36 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters } from "vuex";
 
 export default {
-  name: 'TextList',
-  computed: mapGetters(['armyList', 'label', 'pointsCost', 'unitCount', 'usedUnits', 'version']),
+  name: "TextList",
+  computed: mapGetters([
+    "armyList",
+    "label",
+    "pointsCost",
+    "unitCount",
+    "usedUnits",
+    "version",
+  ]),
   methods: {
-    padLeft (str) {
-      var pointsCostLength = ('' + this.pointsCost).length;
+    padLeft(str) {
+      var pointsCostLength = ("" + this.pointsCost).length;
 
-      str = '' + str;
+      str = "" + str;
 
       while (str.length < pointsCostLength) {
-        str = ' ' + str;
+        str = " " + str;
       }
 
       return str;
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style lang="scss">
-  .text-list {
-    margin: 0;
-  }
+.text-list {
+  margin: 0;
+}
 </style>

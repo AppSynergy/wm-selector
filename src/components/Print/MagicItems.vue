@@ -1,6 +1,6 @@
 <template>
   <div class="magic-items">
-    <h3 class="handle">Magic Items{{used ? ' Used' : ''}}</h3>
+    <h3 class="handle">Magic Items</h3>
 
     <dl>
       <template v-for="(magicItem, name) in magicItems">
@@ -12,34 +12,44 @@
 </template>
 
 <script>
-import { marked } from 'marked';
+import { marked } from "marked";
 
-import store from '@/store';
-import magicItems from '@/json/magic-items.json';
-import versionKey from '@/utils/version-key';
+import store from "@/store";
+import magicItems from "@/json/magic-items.json";
+import versionKey from "@/utils/version-key";
 
 export default {
-  name: 'MagicItems',
+  name: "MagicItems",
   computed: {
-    magicItems () {
-      return this.used ? Object.keys(magicItems[versionKey[store.getters.version]].upgrades)
-        .reduce((usedMagicItems, upgradeID) => {
-          if (store.getters.upgrades[upgradeID].number > 0) {
-            usedMagicItems[upgradeID] = Object.assign({}, store.getters.upgrades[upgradeID]);
-          }
+    magicItems() {
+      if (!magicItems[versionKey[store.getters.version]]) {
+        return [];
+      }
+      return this.used
+        ? Object.keys(
+            magicItems[versionKey[store.getters.version]].upgrades
+          ).reduce((usedMagicItems, upgradeID) => {
+            if (store.getters.upgrades[upgradeID].number > 0) {
+              usedMagicItems[upgradeID] = Object.assign(
+                {},
+                store.getters.upgrades[upgradeID]
+              );
+            }
 
-          return usedMagicItems;
-        }, {}) : magicItems[versionKey[store.getters.version]].upgrades;
-    }
+            return usedMagicItems;
+          }, {})
+        : magicItems[versionKey[store.getters.version]].upgrades;
+    },
   },
   methods: {
-    marked: (text) => marked(text.join('\n'))
+    marked: (text) => marked(text.join("\n")),
   },
-  props: ['used']
+  props: ["used"],
 };
 </script>
 
 <style lang="scss">
-  .magic-items {
-  }
+.magic-items {
+  font-size: 12px;
+}
 </style>

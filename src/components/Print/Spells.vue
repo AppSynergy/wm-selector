@@ -1,49 +1,37 @@
 <template>
   <div class="spells">
     <h3 class="handle">Spells</h3>
-
     <dl>
       <template v-for="(spell, index) in spells">
-        <dt class="name" :key="index + '_name'">{{spell.name}}</dt>
-        <dd class="roll" :key="index + '_roll'">{{spell.roll}}+ to cast</dd>
-        <dd class="range" :key="index + '_range'">Range {{spell.range || 'N/A'}}</dd>
-        <dd class="text" :key="index + '_text'" v-html="marked(spell.text)"></dd>
+        <div :key="index">
+          <h5>
+            <span class="spell">{{ spell.name }}</span>
+            <span class="spell">{{ spell.roll }}+ to cast</span>
+            <span class="spell"> Range {{ spell.range || "N/A" }} </span>
+          </h5>
+          <div>{{ spell.text }}</div>
+        </div>
       </template>
     </dl>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import { marked } from 'marked';
+import { mapGetters } from "vuex";
 
 export default {
-  name: 'Spells',
-  computed: mapGetters(['spells']),
-  methods: {
-    marked: (text) => marked(text.join('\n'))
-  }
+  name: "Spells",
+  computed: mapGetters(["spells"]),
 };
 </script>
 
 <style lang="scss">
-  .spells {
-    .name {
-      float: none;
-      text-transform: uppercase;
+.spells {
+  font-size: 12px;
 
-      &::after {
-        content: none;
-      }
-    }
-
-    .roll,
-    .range {
-      font-style: italic;
-    }
-
-    .range {
-      margin: 0 0 $_ / 2;
-    }
+  .spell {
+    margin-left: 20px;
+    margin-top: 10px;
   }
+}
 </style>
